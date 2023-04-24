@@ -38,16 +38,16 @@ fn Datos(data : &Result<Vec<Record>,Box<dyn Error>>)->Vec<Record> {
 }
 
 fn montecarlo(data : &Result<Vec<Record>,Box<dyn Error>>, functions : &Vec<Record>) {
-    let total = 1_000_000;
+    let total = 10_000_000;
     let mut count : i32 = 0;
     let mut rng = thread_rng();
-    let mut cruces: i32 = 0;
     if let Ok(dato) = data{
         let len_Dato = dato.len()-1;
         for _ in 1..total {
+            let mut cruces : i32 = 0;
             let x = (2.0*rng.gen::<f64>());
             let y = (2.0*rng.gen::<f64>());
-            let m = (1.0-y)/(2.0-x);
+            let m = (2.0-y)/(2.0-x);
             let b = y-m*x;
             println!("({:?},{:?})",x,y);
             for (i,el) in dato.iter().enumerate(){
@@ -58,11 +58,11 @@ fn montecarlo(data : &Result<Vec<Record>,Box<dyn Error>>, functions : &Vec<Recor
                 let fun = functions[i];
                 let x1 = (b-fun.1)/(fun.0-x);
                 if (fun.0-m != 0.0 && x1 <= el.0 && x1 >= secondData.0){
+                    println!("Se cruzo con {:?}",fun);
                     cruces += 1;
                 }
             }
             if (cruces).rem_euclid(2) != 0 {
-                println!("Dio y fue ({:?},{:?})",x,y);
                 count += 1;
             }
             println!("{:?}",count);
