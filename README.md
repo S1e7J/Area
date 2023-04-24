@@ -1,2 +1,2 @@
 # Area
-Programa para calcular el area que separa una seria de puntos.
+Programa para calcular el area que separa una serie de puntos.

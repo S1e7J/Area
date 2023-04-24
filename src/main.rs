@@ -1,5 +1,6 @@
 use std::io;
 use std::error::Error;
+use rand::prelude::*;
 
 // The `main` function is where your program starts executing.
 
@@ -35,13 +36,19 @@ fn Datos(data : &Result<Vec<Record>,Box<dyn Error>>)->Vec<Record> {
     return functions;
 }
 
-fn Montecarlo(data : &Result<Vec<Record>,Box<dyn Error>>, functions : &Vec<Record>) {
-    println!("{:?}",data);
-    println!("{:?}",functions);
+fn montecarlo(data : &Result<Vec<Record>,Box<dyn Error>>, functions : &Vec<Record>) {
+    let total = 1_000_000;
+    let mut count = 0;
+    let mut rng = thread_rng();
+    for _ in 1..total {
+        let x = (2.0*rng.gen::<f64>());
+        let y = (2.0*rng.gen::<f64>());
+        
+    }
 }
 
 fn main() {
     let data = get_data();
     let functions = Datos(&data);
-    Montecarlo(&data , &functions)
+    montecarlo(&data , &functions)
 }
