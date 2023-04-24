@@ -45,10 +45,11 @@ fn montecarlo(data : &Result<Vec<Record>,Box<dyn Error>>, functions : &Vec<Recor
     if let Ok(dato) = data{
         let len_Dato = dato.len()-1;
         for _ in 1..total {
-            let x = (4.0*rng.gen::<f64>());
-            let y = (4.0*rng.gen::<f64>());
-            let m = (0.0-y)/(0.0-x);
+            let x = (2.0*rng.gen::<f64>());
+            let y = (2.0*rng.gen::<f64>());
+            let m = (1.0-y)/(2.0-x);
             let b = y-m*x;
+            println!("({:?},{:?})",x,y);
             for (i,el) in dato.iter().enumerate(){
                 let mut secondData = dato[0];
                 if i < len_Dato{
@@ -61,6 +62,7 @@ fn montecarlo(data : &Result<Vec<Record>,Box<dyn Error>>, functions : &Vec<Recor
                 }
             }
             if (cruces).rem_euclid(2) != 0 {
+                println!("Dio y fue ({:?},{:?})",x,y);
                 count += 1;
             }
             println!("{:?}",count);
