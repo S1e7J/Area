@@ -27,7 +27,6 @@ fn datos(data : &Result<Vec<Record>,Box<dyn Error>>)->Vec<Record> {
             functions.push((m,b));
         }
     }
-    println!("{:?}",functions);
     return functions;
 }
 
@@ -92,9 +91,9 @@ fn prueba(dato: &Vec<Record>,fun: &Vec<Record>) {
     let mut count = 0;
     let mut rng = thread_rng();
     for _ in 1..total {
-        let x = 2.0 * rng.gen::<f64>();
-        let y = 2.0 * rng.gen::<f64>();
-        let m = (2.0-y)/(0.0-x);
+        let x = (2.0 * rng.gen::<f64>())-1.0;
+        let y = (2.0 * rng.gen::<f64>())-1.0;
+        let m = (1.0-y)/(-1.0-x);
         let b = y-m*x;
         let mut cortes = Vec::new();
         for (i,el) in fun.iter().enumerate(){
@@ -103,10 +102,12 @@ fn prueba(dato: &Vec<Record>,fun: &Vec<Record>) {
             let x_corte = (b-el.1)/(el.0-m);
             let y_corte = el.0*x_corte + el.1;
             if comprobar_corte(&x_corte, &el, &first_data, &second_data) && cortes.len()< 2{
-                cortes.push(y_corte);
+                cortes.push((x_corte,y_corte));
             }
         }
-        if comprobar_altura(&cortes, &y){
+        if cortes.len() >= 2 && comprobar_altura(&vec![cortes[0].1,cortes[1].1], &y){
+            // println!("El punto es {:?} y corto en {:?}",(x,y),cortes);
+            println!("ax.plot([{:?},{:?},{:?}],[{:?},{:?},{:?}],'o')",cortes[0].0,cortes[1].0,x,cortes[0].1,cortes[1].1,y);
             count += 1;
         }
     }
@@ -119,7 +120,6 @@ fn main() {
     // montecarlo(&data , &functions);
     if let Ok(dato) = data {
         // prueba(&dato, &functions)
-        println!("La funcion es {:?} y los datos son {:?}",functions,dato);
         prueba(&dato,&functions);
     }
 }
