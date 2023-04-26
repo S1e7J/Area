@@ -2,7 +2,6 @@ use std::any::Any;
 use std::io;
 use std::error::Error;
 use rand::prelude::*;
-
 // The `main` function is where your program starts executing.
 
 type Record = (f64, f64);
@@ -67,6 +66,27 @@ fn segundo_dato(dato:&Vec<Record>,ind : usize ) -> Record {
     second_data
 }
 
+fn comprobar_corte(x_corte: &f64, fun : &Record, fdata : &Record, sdata : &Record) -> bool{
+    let mut ret = false;
+    if fun.0 >= 0.0 && x_corte >= &fdata.0 && x_corte <= &sdata.0 {
+        ret = true;
+    } else if fun.0 <=0.0 && x_corte <= &fdata.0 && x_corte >=&sdata.0 {
+        ret = true;
+    }
+    return ret;
+}
+
+fn comprobar_altura(cortes : &Vec<f64>, altura : &f64) -> bool{
+    let mut ret = false;
+    if cortes.len() >= 2 && &cortes[0] <= altura && &cortes[1] >= altura{
+        ret = true;
+    } else if cortes.len() >= 2 && &cortes[0] >= altura && &cortes[1] <= altura {
+        ret = true;
+    }
+    return ret;
+
+}
+
 fn prueba(dato: &Vec<Record>,fun: &Vec<Record>) {
     let total = 1_000_000;
     let mut count = 0;
@@ -74,15 +94,23 @@ fn prueba(dato: &Vec<Record>,fun: &Vec<Record>) {
     for _ in 1..total {
         let x = 2.0 * rng.gen::<f64>();
         let y = 2.0 * rng.gen::<f64>();
-        let mut cruces = 0;
-        let m = (2.0-y)/(2.0-x);
+        let m = (2.0-y)/(0.0-x);
         let b = y-m*x;
+        let mut cortes = Vec::new();
         for (i,el) in fun.iter().enumerate(){
-            let next = segundo_dato(dato, i);
+            let first_data = dato[i];
+            let second_data = segundo_dato(dato, i);
             let x_corte = (b-el.1)/(el.0-m);
             let y_corte = el.0*x_corte + el.1;
+            if comprobar_corte(&x_corte, &el, &first_data, &second_data) && cortes.len()< 2{
+                cortes.push(y_corte);
+            }
+        }
+        if comprobar_altura(&cortes, &y){
+            count += 1;
         }
     }
+    println!("{:?}",count as f32/total as f32);
 }
 
 fn main() {
