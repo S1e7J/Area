@@ -67,9 +67,9 @@ fn segundo_dato(dato:&Vec<Record>,ind : usize ) -> Record {
 
 fn comprobar_corte(x_corte: &f64, fun : &Record, fdata : &Record, sdata : &Record) -> bool{
     let mut ret = false;
-    if fun.0 >= 0.0 && x_corte >= &fdata.0 && x_corte <= &sdata.0 {
+    if fun.0 >= 0.0 && x_corte <= &fdata.0 && x_corte >= &sdata.0 {
         ret = true;
-    } else if fun.0 <=0.0 && x_corte <= &fdata.0 && x_corte >=&sdata.0 {
+    } else if fun.0 <=0.0 && x_corte >= &fdata.0 && x_corte <=&sdata.0 {
         ret = true;
     }
     return ret;
@@ -105,9 +105,12 @@ fn prueba(dato: &Vec<Record>,fun: &Vec<Record>) {
                 cortes.push((x_corte,y_corte));
             }
         }
+        if cortes.len() >= 2 {
+            println!("ax.plot([{:?},{:?},{:?}],[{:?},{:?},{:?}],'o')",x,cortes[0].0,cortes[1].0,y,cortes[0].1,cortes[1].1);
+        }
         if cortes.len() >= 2 && comprobar_altura(&vec![cortes[0].1,cortes[1].1], &y){
             // println!("El punto es {:?} y corto en {:?}",(x,y),cortes);
-            println!("ax.plot([{:?},{:?},{:?}],[{:?},{:?},{:?}],'o')",cortes[0].0,cortes[1].0,x,cortes[0].1,cortes[1].1,y);
+            // println!("ax.plot([{:?},{:?},{:?}],[{:?},{:?},{:?}],'o')",cortes[0].0,cortes[1].0,x,cortes[0].1,cortes[1].1,y);
             count += 1;
         }
     }
