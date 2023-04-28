@@ -1,4 +1,4 @@
-use std::any::Any;
+
 use std::io;
 use std::error::Error;
 use rand::prelude::*;
@@ -65,11 +65,11 @@ fn segundo_dato(dato:&Vec<Record>,ind : usize ) -> Record {
     second_data
 }
 
-fn comprobar_corte(x_corte: &f64, fun : &Record, fdata : &Record, sdata : &Record) -> bool{
+fn comprobar_corte(x_corte: &f64, fdata : &Record, sdata : &Record) -> bool{
     let mut ret = false;
-    if fun.0 >= 0.0 && x_corte <= &fdata.0 && x_corte >= &sdata.0 {
+    if x_corte <= &fdata.0 && x_corte >= &sdata.0 {
         ret = true;
-    } else if fun.0 <=0.0 && x_corte >= &fdata.0 && x_corte <=&sdata.0 {
+    } else if x_corte >= &fdata.0 && x_corte <=&sdata.0 {
         ret = true;
     }
     return ret;
@@ -91,8 +91,8 @@ fn prueba(dato: &Vec<Record>,fun: &Vec<Record>) {
     let mut count = 0;
     let mut rng = thread_rng();
     for _ in 1..total {
-        let x = (2.0 * rng.gen::<f64>())-1.0;
-        let y = (2.0 * rng.gen::<f64>())-1.0;
+        let x = (2.0*rng.gen::<f64>())-1.0;
+        let y = (2.0*rng.gen::<f64>())-1.0;
         let m = (1.0-y)/(-1.0-x);
         let b = y-m*x;
         let mut cortes = Vec::new();
@@ -101,20 +101,16 @@ fn prueba(dato: &Vec<Record>,fun: &Vec<Record>) {
             let second_data = segundo_dato(dato, i);
             let x_corte = (b-el.1)/(el.0-m);
             let y_corte = el.0*x_corte + el.1;
-            if comprobar_corte(&x_corte, &el, &first_data, &second_data) && cortes.len()< 2{
+            if comprobar_corte(&x_corte, &first_data, &second_data) && cortes.len()< 2{
                 cortes.push((x_corte,y_corte));
             }
         }
-        if cortes.len() >= 2 {
-            println!("ax.plot([{:?},{:?},{:?}],[{:?},{:?},{:?}],'o')",x,cortes[0].0,cortes[1].0,y,cortes[0].1,cortes[1].1);
-        }
         if cortes.len() >= 2 && comprobar_altura(&vec![cortes[0].1,cortes[1].1], &y){
-            // println!("El punto es {:?} y corto en {:?}",(x,y),cortes);
-            // println!("ax.plot([{:?},{:?},{:?}],[{:?},{:?},{:?}],'o')",cortes[0].0,cortes[1].0,x,cortes[0].1,cortes[1].1,y);
+            // println!("ax.plot({:?},{:?},'ro')",x,y);
             count += 1;
         }
     }
-    println!("{:?}",count as f32/total as f32);
+    println!("{:?}",4.0*count as f32/total as f32);
 }
 
 fn main() {
